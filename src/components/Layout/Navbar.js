@@ -1,53 +1,63 @@
-import { Layout, Menu, Button } from "antd";
-const { Header } = Layout;
+import { Button, Layout, Menu } from "antd";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+const { Header } = Layout;
 
 const Navbar = () => {
-  return (
-    <Header
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
-      <div className="demo-logo">
-        <Link
-          href="/"
-          style={{
-            textDecoration: "none",
-            color: "white",
-            fontSize: "25px",
-          }}
+    const { data: session } = useSession();
+
+    return (
+        <Header
+            style={{
+                display: "flex",
+                justifyContent: "space-between",
+            }}
         >
-          NEXT AUTH
-        </Link>
-      </div>
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        style={{
-          width: "20%",
-          display: "flex",
-          fontSize: "20px",
-          justifyContent: "space-between",
-        }}
-      >
-        <Link
-          style={{ textDecoration: "none", color: "white" }}
-          href="/profile"
-        >
-          <items>Profile</items>
-        </Link>
-        <Link style={{ textDecoration: "none", color: "white" }} href="/login">
-          <items>Login</items>
-        </Link>
-        <items>
-          <Button type="primary" danger>
-            Logout
-          </Button>
-        </items>
-      </Menu>
-    </Header>
-  );
+            <div className="demo-logo">
+                <Link
+                    href="/"
+                    style={{
+                        textDecoration: "none",
+                        color: "white",
+                        fontSize: "25px",
+                    }}
+                >
+                    NEXT AUTH
+                </Link>
+            </div>
+            <Menu
+                theme="dark"
+                mode="horizontal"
+                style={{
+                    width: "20%",
+                    display: "flex",
+                    fontSize: "20px",
+                    justifyContent: "space-between",
+                }}
+            >
+                <Link
+                    style={{ textDecoration: "none", color: "white" }}
+                    href="/profile"
+                >
+                    <items>Profile</items>
+                </Link>
+
+                {session?.user ? (
+                    <items>
+                        <Button onClick={()=>signOut()} type="primary" danger>
+                            Logout
+                        </Button>
+                    </items>
+                ) : (
+                    <Link
+                        style={{ textDecoration: "none", color: "white" }}
+                        href="/login"
+                    >
+                        <items>Login</items>
+                    </Link>
+                )}
+            </Menu>
+        </Header>
+    );
 };
 export default Navbar;
